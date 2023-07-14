@@ -1,7 +1,7 @@
 ![String_Matrix_Calculator](https://github.com/AbdoSalah22/String-Matrix-Calculator/assets/94136052/29ea3852-df28-4519-b7d9-caac7cf76813)
 
 ## Description
-This project takes a string input that represents a matrix and transforms it into a 2D array and perform operations on it.
+This project takes a string input that represents a matrix and transforms it into a 2D array and perform operations on it. Project was done initially in **C++98** that has a lot of code limitaions.
 
 The matrix calculator that supports all necessary operations that can be done on Matrices.
 
