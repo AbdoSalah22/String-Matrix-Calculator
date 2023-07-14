@@ -75,3 +75,7 @@ Also, the error message should be in the following format: "ERROR!" on a new lin
 NOTE: In the case of decimal point output, you should set the precision of the output to 2 decimal point places.
 
 
+### Personal Note
+This project was my first challenge in my Computer Engineering studies. I had no coding experience before it and I had no idea what to do until the day before deadline. I planned to stay awake fro 24 hours and try to implement this huge project. Somehow I managed to do most of it correctly. Of course some functionalities are not working perfectly but I don't mind. I always look at this project and remember that everything eentually passes, no matter how hard it is. ❤️
+
+
