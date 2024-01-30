@@ -1,149 +1,126 @@
 #include <iostream>
-#include <iomanip>
-#include <string>
-#include <cstring>
-#include <string.h>
-#include <algorithm>
 #include <stdio.h>
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
-#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include <string>
+#include <cstring>
+#include <string.h>
+
+#define N 100
+
 using namespace std;
+//[1 2 3, 4 5 6, 7 8 9]
+//[1 4 7, 2 5 8, 3 6 9]
+
+void readMatrix(string &input, double mat[N][N])
+{
+    if (input[0] != '[')
+    {
+        cout << "ERROR!";
+        exit(0);
+    }
+    if (input[1] == ' ')
+    {
+        cout << "ERROR!";
+        exit(0);
+    }
+    if (input[input.length() - 1] != ']')
+    {
+        cout << "ERROR!";
+        exit(0);
+    }
+
+    input.erase(0, 1);
+    input.pop_back();
+
+    string num = "";
+    int rx = 0;
+    int cx = 0;
+    for (int i = 0; i <= input.length(); i++)
+    {
+        if (input[i] == '-' || input[i] == '.' || input[i] || (input[i] >= '0' && input[i] <= '9'))
+            num += input[i];
+
+        if (input[i] == ' ')
+        {
+            mat[rx][cx] = stod(num);
+            cx++;
+            num = "";
+        }
+
+        if (i == input.length())
+        {
+            mat[rx][cx] = stod(num);
+            cx++;
+            num = "";
+        }
+
+        if (input[i] == ',')
+        {
+            mat[rx][cx] = stod(num);
+            rx++;
+            cx = 0;
+            i++;
+            num = "";
+        }
+    }
+}
+
+int calcRows(string &s)
+{
+    int rows = 1;
+    rows += count(s.begin(), s.end(), ',');
+    return rows;
+}
+
+int calcCols(string &s, int rows)
+{
+    int cols = 1;
+    cols += count(s.begin(), s.end(), ' ');
+    cols = cols / rows;
+    return cols;
+}
 
 int main()
 {
     string x;
-    getline(cin, x);
-    if (x[0] != '[')
-    {
-        cout << "ERROR!";
-        return 0;
-    }
-    if (x[1] == ' ')
-    {
-        cout << "ERROR!";
-        return 0;
-    }
-    if (x[x.length() - 1] != ']')
-    {
-        cout << "ERROR!";
-        return 0;
-    }
-
-    x.erase(0, 1);
-    x.pop_back();
-    //cout << x << endl;
-
-    string a1 = "";
-    double mat1[100][100] = { 0 };
-    double mat2[100][100] = { 0 };
-    int rx = 0;
-    int cx = 0;
-    for (int i = 0;i <= x.length();i++)
-    {
-        if (x[i] == '-' || x[i] == '.' || x[i] || (x[i] >= '0' && x[i] <= '9'))
-            a1 += x[i];
-
-        if (x[i] == ' ')
-        {
-            mat1[rx][cx] = stod(a1);
-            cx++;
-            a1 = "";
-        }
-
-        if (i == x.length())
-        {
-            mat1[rx][cx] = stod(a1);
-            cx++;
-            a1 = "";
-        }
-
-        if (x[i] == ',')
-        {
-            mat1[rx][cx] = stod(a1);
-            rx++;
-            cx = 0;
-            i++;
-            a1 = "";
-        }
-    }
-
-    int rows1 = 1;
-    int columns1 = 1;
-    rows1 += count(x.begin(), x.end(), ',');
-    columns1 += count(x.begin(), x.end(), ' ');
-    columns1 = columns1 / rows1;
-    //cout << rows1 << columns1;
-
+    double mat1[N][N] = {0};
     char op;
+
+    getline(cin, x);
+    readMatrix(x, mat1);
+    int rows1 = calcRows(x);
+    int cols1 = calcCols(x, rows1);
+
     cin >> op;
     cin.ignore();
+
     switch (op)
     {
     case '+':
     {
         string y;
+        double mat2[N][N] = {0};
         getline(cin, y);
-        if (y[0] != '[')
-        {
+        readMatrix(y, mat2);
+        int rows2 = calcRows(y);
+        int cols2 = calcCols(y, rows2);
+
+        if (rows1 != rows2 || cols1 != cols2) {
             cout << "ERROR!";
-            return 0;
+            exit(0);
         }
-        if (y[y.length() - 1] != ']')
-        {
-            cout << "ERROR!";
-            return 0;
-        }
-
-        y.erase(0, 1);
-        y.pop_back();
-        //cout << y << endl;
-
-        string a2 = "";
-        double mat2[100][100] = { 0 };
-        int ry = 0;
-        int cy = 0;
-        for (int i = 0;i <= y.length();i++)
-        {
-            if (y[i] == '-' || y[i] == '.' || y[i] || (y[i] >= '0' && y[i] <= '9'))
-                a2 += y[i];
-
-            if (y[i] == ' ')
-            {
-                mat2[ry][cy] = stod(a2);
-                cy++;
-                a2 = "";
-            }
-
-            if (i == y.length())
-            {
-                mat2[ry][cy] = stod(a2);
-                cy++;
-                a2 = "";
-            }
-
-            if (y[i] == ',')
-            {
-                mat2[ry][cy] = stod(a2);
-                ry++;
-                cy = 0;
-                i++;
-                a2 = "";
-            }
-        }
-
         cout << '[';
-        double mat3[100][100] = { 0 };
-        for (int i = 0;i < rows1;i++)
+        for (int i = 0; i < rows1; i++)
         {
-            for (int j = 0;j < columns1;j++)
+            for (int j = 0; j < cols1; j++)
             {
                 if (!(j == 0 && i == 0))
                     cout << ' ';
-                mat3[i][j] = mat1[i][j] + mat2[i][j];
-                cout << mat3[i][j];
-
+                cout << (int)((mat1[i][j] + mat2[i][j])*100) / 100.0;
             }
             if (i != rows1 - 1)
                 cout << ',';
@@ -155,66 +132,25 @@ int main()
     case '-':
     {
         string y;
+        double mat2[N][N] = {0};
         getline(cin, y);
-        if (y[0] != '[')
-        {
+        readMatrix(y, mat2);
+        int rows2 = calcRows(y);
+        int cols2 = calcCols(y, rows2);
+
+        if (rows1 != rows2 || cols1 != cols2) {
             cout << "ERROR!";
-            return 0;
-        }
-        if (y[y.length() - 1] != ']')
-        {
-            cout << "ERROR!";
-            return 0;
-        }
-
-        y.erase(0, 1);
-        y.pop_back();
-        //cout << y << endl;
-
-        string a2 = "";
-        double mat2[100][100] = { 0 };
-        int ry = 0;
-        int cy = 0;
-        for (int i = 0;i <= y.length();i++)
-        {
-            if (y[i] == '-' || y[i] == '.' || y[i] || (y[i] >= '0' && y[i] <= '9'))
-                a2 += y[i];
-
-            if (y[i] == ' ')
-            {
-                mat2[ry][cy] = stod(a2);
-                cy++;
-                a2 = "";
-            }
-
-            if (i == y.length())
-            {
-                mat2[ry][cy] = stod(a2);
-                cy++;
-                a2 = "";
-            }
-
-            if (y[i] == ',')
-            {
-                mat2[ry][cy] = stod(a2);
-                ry++;
-                cy = 0;
-                i++;
-                a2 = "";
-            }
+            exit(0);
         }
 
         cout << '[';
-        double mat3[100][100] = { 0 };
-        for (int i = 0;i < rows1;i++)
+        for (int i = 0; i < rows1; i++)
         {
-            for (int j = 0;j < columns1;j++)
+            for (int j = 0; j < cols1; j++)
             {
                 if (!(j == 0 && i == 0))
                     cout << ' ';
-                mat3[i][j] = mat1[i][j] - mat2[i][j];
-                cout << mat3[i][j];
-
+                cout << (int)((mat1[i][j] - mat2[i][j])*100) / 100.0;
             }
             if (i != rows1 - 1)
                 cout << ',';
@@ -222,126 +158,72 @@ int main()
         cout << ']';
         break;
     }
+
     case '*':
     {
         string y;
+        double mat2[N][N] = {0};
         getline(cin, y);
-        if (y[0] != '[')
-        {
+        readMatrix(y, mat2);
+        int rows2 = calcRows(y);
+        int cols2 = calcCols(y, rows2);
+
+        if (cols1 != rows2) {
             cout << "ERROR!";
-            return 0;
-        }
-        if (y[y.length() - 1] != ']')
-        {
-            cout << "ERROR!";
-            return 0;
+            exit(0);
         }
 
-        y.erase(0, 1);
-        y.pop_back();
-        //cout << y << endl;
-
-        string a2 = "";
-        double mat2[100][100] = { 0 };
-        int ry = 0;
-        int cy = 0;
-        for (int i = 0;i <= y.length();i++)
-        {
-            if (y[i] == '-' || y[i] == '.' || y[i] || (y[i] >= '0' && y[i] <= '9'))
-                a2 += y[i];
-
-            if (y[i] == ' ')
-            {
-                mat2[ry][cy] = stod(a2);
-                cy++;
-                a2 = "";
-            }
-
-            if (i == y.length())
-            {
-                mat2[ry][cy] = stod(a2);
-                cy++;
-                a2 = "";
-            }
-
-            if (y[i] == ',')
-            {
-                mat2[ry][cy] = stod(a2);
-                ry++;
-                cy = 0;
-                i++;
-                a2 = "";
-            }
-        }
-
+        double temp;
         cout << '[';
-        double mat3[100][100] = { 0 };
-        for (int i = 0;i < rows1;i++)
-        {
-            for (int j = 0;j < columns1;j++)
-            {
-                if (!(j == 0 && i == 0))
+        for (int i = 0; i < rows1; i++) {
+            for (int j = 0; j < cols2; j++) {
+                if (!(j == 0 && i == 0)) {
                     cout << ' ';
-                mat3[i][j] = mat1[i][j] - mat2[i][j];
-                cout << mat3[i][j];
-
+                }
+                temp = 0;
+                for (int k = 0; k < cols1; k++) {
+                    temp += mat1[i][k] * mat2[k][j];
+                }
+                cout << (int)((temp)*100) / 100.0;
             }
-            if (i != rows1 - 1)
+            if (i != rows1 - 1) {
                 cout << ',';
+            }
         }
         cout << ']';
         break;
-   
     }
-        case 'T':
-    {
-        double transpose[100][100];
-        for (int i = 0; i < rows1; ++i)
-            for (int j = 0; j < columns1; ++j) {
-                transpose[j][i] = mat1[i][j];
-            }
 
+    case 'T':
+    {
         cout << '[';
-        for (int i = 0; i < columns1; ++i)
-            for (int j = 0; j < rows1; ++j) 
+        for (int i = 0; i < cols1; ++i)
+            for (int j = 0; j < rows1; ++j)
             {
                 if (!(j == 0 && i == 0))
                     cout << ' ';
-                cout << transpose[i][j];
-                if (j == rows1-1 && i != columns1-1)
+                cout << mat1[j][i];
+                if (j == rows1 - 1 && i != cols1 - 1)
                     cout << ',';
             }
         cout << ']';
         break;
     }
 
-        case 'D':
+    case 'D':
     {
-        if(rows1!=columns1)
-        {
+        if (rows1 != cols1){
             cout << "ERROR!";
             return 0;
         }
-            double cx, detResult = 1;
-            for (int i = 0; i < rows1; i++) {
-                for (int k = i + 1; k < rows1; k++) {
-                    cx = mat1[k][i] / mat1[i][i];
-                    for (int j = i; j < rows1; j++)
-                        mat1[k][j] = mat1[k][j] - cx * mat1[i][j];
-                }
-            }
-            for (int i = 0; i < rows1; i++)
-                detResult *= mat1[i][i];
-            cout<< detResult;
-            break;
-    }
-
-    //doesn't work properly
-    case 'I':
-    {
         double cx, detResult = 1;
-        for (int i = 0; i < rows1; i++) {
-            for (int k = i + 1; k < rows1; k++) {
+        for (int i = 0; i < rows1; i++){
+            if (mat1[i][i] == 0) {
+                cout << "ERROR!";
+                exit(0);
+            }
+
+            for (int k = i + 1; k < rows1; k++){
                 cx = mat1[k][i] / mat1[i][i];
                 for (int j = i; j < rows1; j++)
                     mat1[k][j] = mat1[k][j] - cx * mat1[i][j];
@@ -349,20 +231,57 @@ int main()
         }
         for (int i = 0; i < rows1; i++)
             detResult *= mat1[i][i];
-        
-        for (int i = 0; i < rows1; i++) 
-        {
-            for (int j = 0; j < rows1 ;j++)
-                cout << ((mat1[(j + 1) % rows1][(i + 1) % rows1] * mat1[(j + 2) % rows1][(i + 2) % rows1]) 
-                    - (mat1[(j + 1) % rows1][(i + 2) % rows1] * mat1[(j + 2) % rows1][(i + 1) % rows1])) / detResult;
-        }
+        cout << detResult;
+        break;
     }
 
-    // default:
-    // cout<<"Invalid Operand"<<endl;
-    
+        // needs fixing
+         case 'I':
+         {
+            if (rows1 != cols1){
+                cout << "ERROR!";
+                return 0;
+            }
+            double cx, detResult = 1;
+            for (int i = 0; i < rows1; i++){
+                if (mat1[i][i] == 0) {
+                    cout << "ERROR!";
+                    exit(0);
+                }
+
+                for (int k = i + 1; k < rows1; k++){
+                    cx = mat1[k][i] / mat1[i][i];
+                    for (int j = i; j < rows1; j++)
+                        mat1[k][j] = mat1[k][j] - cx * mat1[i][j];
+                }
+            }
+            for (int i = 0; i < rows1; i++)
+                detResult *= mat1[i][i];
+
+            if (detResult == 0) {
+                cout << "ERROR!";
+                exit(0);
+            }
+
+            cout << '[';
+            for (int i = 0; i < rows1; i++) {
+                for (int j = 0; j < rows1; j++) {
+                    if (!(j == 0 && i == 0))
+                        cout << ' ';
+                    double cofactor = ((mat1[(j + 1) % rows1][(i + 1) % rows1] * mat1[(j + 2) % rows1][(i + 2) % rows1]) -
+                                    (mat1[(j + 1) % rows1][(i + 2) % rows1] * mat1[(j + 2) % rows1][(i + 1) % rows1]));
+                    cout << cofactor / detResult;
+                }
+                if (i != rows1 - 1)
+                    cout << ',';
+            }
+            cout << ']';
+        }
+
+        default:
+        ;
+        // cout<<"Invalid Operand"<<endl;
     }
 
     return 0;
-    //[1 2 3, 4 5 6, 7 8 9]
 }
