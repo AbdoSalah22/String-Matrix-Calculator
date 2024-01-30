@@ -162,35 +162,52 @@ int main()
     case '*':
     {
         string y;
-        double mat2[N][N] = {0};
         getline(cin, y);
-        readMatrix(y, mat2);
-        int rows2 = calcRows(y);
-        int cols2 = calcCols(y, rows2);
 
-        if (cols1 != rows2) {
-            cout << "ERROR!";
-            exit(0);
-        }
+        if (y[0] == '['){
+            double mat2[N][N] = {0};
+            readMatrix(y, mat2);
+            int rows2 = calcRows(y);
+            int cols2 = calcCols(y, rows2);
+            if (cols1 != rows2) {
+                cout << "ERROR!";
+                exit(0);
+            }
 
-        double temp;
-        cout << '[';
-        for (int i = 0; i < rows1; i++) {
-            for (int j = 0; j < cols2; j++) {
-                if (!(j == 0 && i == 0)) {
-                    cout << ' ';
+            double temp;
+            cout << '[';
+            for (int i = 0; i < rows1; i++) {
+                for (int j = 0; j < cols2; j++) {
+                    if (!(j == 0 && i == 0)) {
+                        cout << ' ';
+                    }
+                    temp = 0;
+                    for (int k = 0; k < cols1; k++) {
+                        temp += mat1[i][k] * mat2[k][j];
+                    }
+                    cout << (int)((temp)*100) / 100.0;
                 }
-                temp = 0;
-                for (int k = 0; k < cols1; k++) {
-                    temp += mat1[i][k] * mat2[k][j];
+                if (i != rows1 - 1) {
+                    cout << ',';
                 }
-                cout << (int)((temp)*100) / 100.0;
             }
-            if (i != rows1 - 1) {
-                cout << ',';
-            }
+            cout << ']';
+            break;
         }
-        cout << ']';
+        else{
+            double scale = stod(y);
+            cout << '[';
+            for (int i = 0; i < rows1; i++){
+                for (int j = 0; j < cols1; j++){
+                    if (!(j == 0 && i == 0))
+                        cout << ' ';
+                    cout << scale * mat1[i][j];
+                }
+                if (i != rows1 - 1)
+                    cout << ',';
+            }
+            cout << ']';
+        }
         break;
     }
 

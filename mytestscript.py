@@ -29,6 +29,12 @@ def main():
     actual_output = run_cpp_program(test_input)
     print(f"{Fore.GREEN}PASS{Style.RESET_ALL}" if compare_output(expected_output, actual_output) else f"{Fore.RED}FAIL{Style.RESET_ALL}")
 
+    # Test Multiplication by Scale
+    test_input = "[1 1 1, 1 1 1, 1 1 1]\n*\n2\n"
+    expected_output = "[2 2 2, 2 2 2, 2 2 2]"
+    actual_output = run_cpp_program(test_input)
+    print(f"{Fore.GREEN}PASS{Style.RESET_ALL}" if compare_output(expected_output, actual_output) else f"{Fore.RED}FAIL{Style.RESET_ALL}")
+
     # Test Transpose
     test_input = "[1 2 3, 1 2 3, 1 2 3]\nT\n"
     expected_output = "[1 1 1, 2 2 2, 3 3 3]"
